@@ -3,7 +3,9 @@ package internal
 import ("net/http"
 "encoding/json"
 "io"
-"database/sql")
+"database/sql"
+"github.com/geshatude/JobBot/internal/server"
+"log/slog")
 
 // The Handler
 
@@ -82,4 +84,21 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) error {
         }
     }
     return nil
+}
+
+func ReqLog(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		var (
+			ip     = r.RemoteAddr
+			method = r.Method
+			url    = r.URL.String()
+		)
+		reqAttrs := slog.Group("request", "ip", ip, "method", method, "url", url)
+		slog.Info("request recieved", reqAttrs)
+
+		next.ServeHTTP(w, r)
+
+		slog.Info("request completed", "Duration", time.Since(start))
+	})
 }

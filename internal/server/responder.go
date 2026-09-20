@@ -4,7 +4,7 @@ import ("database/sql"
 "net/http"
 "encoding/json"
 "bytes"
-"github.com/geshatude/JobBot/utils"
+"github.com/geshatude/JobBot/internal/server"
 )
 // The Responder
 
@@ -22,11 +22,12 @@ var Categories InlineKeyboardMarkup = InlineKeyboardMarkup{
 var Locations InlineKeyboardMarkup = InlineKeyboardMarkup{
 	InlineKeyboard: [][]InlineKeyboardButton{
 		{
-			{Text: "Warszawa", CallbackData: "warszawa"},
-			{Text: "Kraków", CallbackData: "krakow"},
-			{Text: "Wrocław", CallbackData: "wroclaw"},
-			{Text: "Poznań", CallbackData: "poznan"},
-			{Text: "Gdańsk", CallbackData: "gdansk"},
+			{Text: "Warszawa", CallbackData: "Warszawa"},
+			{Text: "Kraków", CallbackData: "Kraków"},
+			{Text: "Wrocław", CallbackData: "Wrocław"},
+			{Text: "Poznań", CallbackData: "Poznań"},
+			{Text: "Gdańsk", CallbackData: "Gdańsk"},
+			{Text: "Praha", CallbackData: "Praha"}
 		},
 	},
 }
