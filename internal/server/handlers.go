@@ -1,11 +1,12 @@
-package internal
+package server
 
 import ("net/http"
 "encoding/json"
 "io"
 "database/sql"
-"github.com/geshatude/JobBot/internal/server"
-"log/slog")
+"log/slog"
+"time"
+"github.com/geshatude/JobBot/internal/utils")
 
 // The Handler
 
@@ -58,7 +59,7 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) error {
     }
 
     if currentUpdate.Message != nil {
-        responder := &Responder{
+        responder := &utils.Responder{
             ChatID: currentUpdate.Message.Chat.ID,
             UserID: currentUpdate.Message.From.ID,
         }
@@ -74,7 +75,7 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) error {
     		}
 		}
     } else if currentUpdate.CallbackQuery != nil {
-        responder := &Responder{
+        responder := &utils.Responder{
             ChatID: currentUpdate.CallbackQuery.Message.Chat.ID,
             UserID: currentUpdate.CallbackQuery.From.ID,
         }

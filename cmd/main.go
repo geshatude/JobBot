@@ -7,8 +7,20 @@ _"github.com/lib/pq"
 "github.com/geshatude/JobBot/internal/utils"
 "net/http"
 "time"
-"log"
-"os")
+"golang.ngrok.com/ngrok/v2"
+"context")
+
+func connectNgrok() {
+	fwd, err := ngrok.Forward(context.Background(),
+		ngrok.WithUpstream("http://localhost:8085"),
+		ngrok.WithURL("https://email-atonable-requisite.ngrok-free.dev"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Available at:", fwd.URL())
+	select {}
+}
 
 func main() {
 	mymux := http.NewServeMux()
@@ -17,9 +29,7 @@ func main() {
 		log.Fatal("database connection error", err)
 	}
 	go utils.StartScheduler(db, 24*time.Hour)
-	mymux.Handle("/webhook", &server.Handler{DB: db})
-	err = http.ListenAndServe(os.Getenv("PORT"), server.ReqLog(mymux))
-	if err != nil {
-		log.Fatal("Server error", err)
-	}
+	mymux.Handle("/telegram-webhook", &server.Handler{Database: db})
+	go http.ListenAndServe(":8085", server.ReqLog(mymux))
+	connectNgrok()
 }

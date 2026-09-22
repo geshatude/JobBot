@@ -1,7 +1,6 @@
 package utils
 
 import ("database/sql"
-"github.com/geshatude/JobBot/internal/server"
 "net/http"
 "encoding/json"
 "bytes"
@@ -28,7 +27,7 @@ type Match struct {
 }
 
 func GetMatches(db *sql.DB) ([]Match, error) {
-    rows, err := db.Query("
+    rows, err := db.Query(`
         SELECT s.userid, s.chatid, o.guid, o.applyurl, o.category, o.location, o.workplace, o.experience
         FROM subscriptions s
         JOIN job_offers o
@@ -39,8 +38,8 @@ func GetMatches(db *sql.DB) ([]Match, error) {
         WHERE NOT EXISTS (
           SELECT 1 FROM sent_offers sn
           WHERE sn.userid = s.userid AND sn.guid = o.guid
-        )"
-	)
+        )
+        `)
     if err != nil {
         return nil, err
     }
@@ -57,27 +56,28 @@ func GetMatches(db *sql.DB) ([]Match, error) {
     }
     return matches, nil
 }
-func Notify(matches []Match) error {
+
+func Notify(matches []Match, db *sql.DB) error {
 	for _, match := range matches {
-    var message server.SendMessageRequest
+    var message SendMessageRequest
     message.ChatID = match.ChatID
     message.Text = "New job offer found!\n\nCategory: " + match.Category + "\nLocation: " + match.Location + "\nWorkplace: " + match.Workplace + "\nExperience: " + match.Experience + "\n\nApply here: " + match.ApplyUrl
 
     jsonData, err := json.Marshal(message)
     if err != nil {
         log.Println("Error marshalling message:", err)
-        return
+        continue
     }
 
-    _, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+    _, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
     if err != nil {
         log.Println("Error sending message:", err)
-        return
+        continue
     }
     _, err = db.Exec("INSERT INTO sent_offers (userid, guid) VALUES ($1, $2)", match.UserID, match.Guid)
     if err != nil {
         log.Println("Error inserting sent offer:", err)
-        return
+        continue
     }   
     }
     return nil

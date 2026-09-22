@@ -3,13 +3,12 @@ package utils
 import ("time"
 "database/sql"
 "log"
-"github.com/geshatude/JobBot/internal/utils"
 )
 
 // The Scheduler
 
 func StartScheduler(db *sql.DB, interval time.Duration) {
-	rnunCycle(db)
+	runCycle(db)
     ticker := time.NewTicker(interval)
     defer ticker.Stop()
 
@@ -20,19 +19,19 @@ func StartScheduler(db *sql.DB, interval time.Duration) {
 
 func runCycle(db *sql.DB) {
     log.Println("Starting scrape cycle...")
-    err := utils.Scrape(db)
+    err := Scrape(db)
     if err != nil {
         log.Println("Scrape error:", err)
         return
     }
-
-    matches, err := utils.GetMatches(db)
+    log.Println("Scrape cycle completed. Starting matching and notification...")
+    matches, err := GetMatches(db)
     if err != nil {
         log.Println("Matching error:", err)
         return
     }
-
-    err = utils.Notify(matches, db)
+    log.Printf("Found %d matches. Sending notifications...", len(matches))
+    err = Notify(matches, db)
     if err != nil {
         log.Println("Notify error:", err)
         return

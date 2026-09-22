@@ -1,10 +1,9 @@
-package internal
+package utils
 
 import ("database/sql"
 "net/http"
 "encoding/json"
 "bytes"
-"github.com/geshatude/JobBot/internal/server"
 )
 // The Responder
 
@@ -27,7 +26,7 @@ var Locations InlineKeyboardMarkup = InlineKeyboardMarkup{
 			{Text: "Wrocław", CallbackData: "Wrocław"},
 			{Text: "Poznań", CallbackData: "Poznań"},
 			{Text: "Gdańsk", CallbackData: "Gdańsk"},
-			{Text: "Praha", CallbackData: "Praha"}
+			{Text: "Praha", CallbackData: "Praha"},
 		},
 	},
 }
@@ -81,7 +80,7 @@ func (r *Responder) Sendmessage(m string) error {
 	if err != nil {
 		return err
 	}
-	_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+	_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
@@ -101,7 +100,7 @@ func (r *Responder) StartSubcription(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+	_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
@@ -136,7 +135,7 @@ func (r *Responder) SendCallback(cb string, db *sql.DB) error {
 		if err != nil {
 			return err
 		}
-		_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+		_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			return err
 		}
@@ -153,7 +152,7 @@ func (r *Responder) SendCallback(cb string, db *sql.DB) error {
 		if err != nil {
 			return err
 		}
-		_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+		_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			return err
 		}
@@ -170,7 +169,7 @@ func (r *Responder) SendCallback(cb string, db *sql.DB) error {
 		if err != nil {
 			return err
 		}
-		_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+		_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			return err
 		}
@@ -190,7 +189,7 @@ func (r *Responder) SendCallback(cb string, db *sql.DB) error {
 		if err != nil {
 			return err
 		}
-		_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+		_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			return err
 		}
@@ -202,7 +201,7 @@ func (r *Responder) SendCallback(cb string, db *sql.DB) error {
 		if err != nil {
 			return err
 		}
-		_, err = http.Post("https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage", "application/json", bytes.NewBuffer(jsonData))
+		_, err = http.Post("https://api.telegram.org/bot8949513390:AAGC-U8q7KzoKC8_VGpLZF4Nzczurk93m3I/sendMessage", "application/json", bytes.NewBuffer(jsonData))
 		if err != nil {
 			return err
 		}
@@ -216,7 +215,7 @@ func Finalize (chatid int64, userid int64, db *sql.DB) error {
 		return err
 	}
 	defer rows.Close()
-	var row utils.Subscription
+	var row Subscription
 	for rows.Next() {
 		err = rows.Scan(&row.Category, &row.Location, &row.Workplace, &row.Experience)
 		if err != nil {
